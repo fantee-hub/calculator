@@ -15,8 +15,16 @@ const ButtonStyle = styled.div`
     width: 100%;
     font-size: 1.2rem;
     font-weight: bold;
-    color: #4e4e4e;
+    color: #252525;
     cursor: pointer;
+    border: none;
+
+    background: transparent;
+    transition: all 0.3s ease;
+    &:hover {
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 0.8rem;
+    }
   }
 `;
 export default Button;

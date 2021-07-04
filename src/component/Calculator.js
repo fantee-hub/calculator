@@ -4,19 +4,46 @@ import Button from "./Button";
 
 const Calculator = () => {
   const [textField, setTextField] = useState({
-    current: 0,
-    valueContainer: [],
+    current: "0",
+  });
+  const [container, setContainer] = useState({
+    store: [],
   });
 
   const reset = () => {
     setTextField({
-      current: 0,
+      current: "0",
+      isCurrent: false,
+    });
+    setContainer({
+      store: [],
     });
   };
-  const lies = (symbol) => {
-    setTextField({
-      current: textField.current + symbol,
-    });
+
+  const addValueToInput = (symbol) => {
+    if (["/", "+", "-", "*"].indexOf(symbol) > -1) {
+      let { store } = container;
+      store.push(textField.current + " " + symbol);
+      setTextField({
+        ...textField,
+        isCurrent: true,
+        store,
+      });
+    } else {
+      if (
+        (textField.current === "0" && symbol !== ".") ||
+        textField.isCurrent
+      ) {
+        setTextField({
+          current: symbol,
+          isCurrent: false,
+        });
+      } else {
+        setTextField({
+          current: textField.current + symbol,
+        });
+      }
+    }
   };
   const buttons = [
     { symbol: "C", col: 3, action: reset },
@@ -41,14 +68,17 @@ const Calculator = () => {
 
   return (
     <Main>
-      <input type="text" value={textField.current} />
+      {container.store.length > 0 ? (
+        <div className="valueContainer">
+          {container.store[container.store.length - 1]}
+        </div>
+      ) : null}
+      <input type="text" value={textField.current} readOnly />
       <div className="buttons">
         {buttons.map((button, index) => (
           <Button
             symbol={button.symbol}
             key={index}
-            textField={textField}
-            setTextField={setTextField}
             col={button.col}
             action={(symbol) => button.action(symbol)}
           />
@@ -59,19 +89,42 @@ const Calculator = () => {
 };
 
 const Main = styled.div`
+  max-width: 70%;
+  margin: 0 auto;
+  padding: 1rem;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.3)
+  );
+  backdrop-filter: blur(2rem);
+  border-radius: 1rem;
+
   input {
     width: 100%;
-    padding: 1.5rem;
+    padding: 0.8rem 1.5rem;
     text-align: right;
+    font-size: 3rem;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    &:focus {
+      outline: none;
+    }
   }
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 0.3rem;
-    background: #bbba;
+    background: transparent;
     .column-3 {
       grid-column: span 3;
     }
+  }
+  .valueContainer {
+    text-align: right;
+    padding: 1rem 1.5rem 0rem 0rem;
+    color: #686868;
   }
 `;
 
