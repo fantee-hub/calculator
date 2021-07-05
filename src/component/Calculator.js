@@ -45,6 +45,45 @@ const Calculator = () => {
       }
     }
   };
+
+  const calculate = () => {
+    const result = eval(
+      `${container.store[container.store.length - 1]}${textField.current}`
+    );
+    // setContainer({
+    //   store: [
+    //     `${container.store[container.store.length - 1]} ${textField.current}`,
+    //   ],
+    // });
+    setTextField({
+      current: (Number.isInteger(result)
+        ? result
+        : result.toFixed(6)
+      ).toString(),
+    });
+    setContainer({
+      store: [],
+    });
+  };
+
+  const negate = () => {
+    if (!textField.current.includes("-") && parseInt(textField.current) > 0) {
+      setTextField({
+        ...textField,
+        current: `-${textField.current}`,
+      });
+    } else {
+      if (textField.current === "0") {
+        setTextField({
+          current: textField.current.substr(0),
+        });
+      } else {
+        setTextField({
+          current: textField.current.substr(1),
+        });
+      }
+    }
+  };
   const buttons = [
     { symbol: "C", col: 3, action: reset },
     { symbol: "/", col: 1, action: addValueToInput },
@@ -60,10 +99,10 @@ const Calculator = () => {
     { symbol: "2", col: 1, action: addValueToInput },
     { symbol: "3", col: 1, action: addValueToInput },
     { symbol: "+", col: 1, action: addValueToInput },
-    { symbol: "+/-", col: 1, action: addValueToInput },
+    { symbol: "+/-", col: 1, action: negate },
     { symbol: "0", col: 2, action: addValueToInput },
     { symbol: ".", col: 1, action: addValueToInput },
-    { symbol: "=", col: 1, action: addValueToInput },
+    { symbol: "=", col: 1, action: calculate },
   ];
 
   return (
@@ -89,7 +128,7 @@ const Calculator = () => {
 };
 
 const Main = styled.div`
-  max-width: 70%;
+  max-width: 80%;
   margin: 0 auto;
   padding: 1rem;
   background: linear-gradient(
@@ -99,15 +138,19 @@ const Main = styled.div`
   );
   backdrop-filter: blur(2rem);
   border-radius: 1rem;
+  @media screen and (max-width: 400px) {
+    max-width: 90%;
+  }
 
   input {
     width: 100%;
-    padding: 0.8rem 1.5rem;
+    padding: 1.7rem 1.5rem;
     text-align: right;
     font-size: 3rem;
     font-weight: bold;
     border: none;
     background: transparent;
+    position: relative;
     &:focus {
       outline: none;
     }
@@ -122,8 +165,10 @@ const Main = styled.div`
     }
   }
   .valueContainer {
+    position: absolute;
+    right: 2.7rem;
     text-align: right;
-    padding: 1rem 1.5rem 0rem 0rem;
+    top: 1rem;
     color: #686868;
   }
 `;
