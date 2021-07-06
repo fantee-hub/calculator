@@ -169,7 +169,7 @@ const Main = styled.div`
     right: 2.7rem;
     text-align: right;
     top: 1rem;
-    color: #686868;
+    color: rgba(49, 49, 49, 0.4);
   }
 `;
 
